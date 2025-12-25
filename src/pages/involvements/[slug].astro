@@ -1,0 +1,76 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PaneController from '../../components/panes/PaneController';
+import { involvements, getInvolvement } from '../../lib/contentStore';
+
+export async function getStaticPaths() {
+  return involvements.map((inv) => ({
+    params: { slug: inv.slug },
+    props: { involvement: inv },
+  }));
+}
+
+const { slug } = Astro.params;
+const { involvement } = Astro.props;
+
+const title = involvement
+  ? `${involvement.title} | Vikram Agrawal`
+  : 'Experience | Vikram Agrawal';
+const description = involvement
+  ? `${involvement.title} at ${involvement.organization.title}`
+  : 'Professional experience';
+---
+
+<Layout title={title} description={description}>
+  <main class="min-h-screen">
+    <!-- Hero Section (same as homepage) -->
+    <section class="flex flex-col items-center justify-center min-h-screen px-4 text-center">
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+        Vikram Agrawal
+      </h1>
+      <p class="text-xl md:text-2xl text-[var(--color-muted)] max-w-2xl mb-8">
+        Software & Product Engineer
+      </p>
+      <div class="flex gap-4">
+        <a 
+          href="/#experience" 
+          class="px-6 py-3 bg-[var(--color-accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+        >
+          View Experience
+        </a>
+        <a 
+          href="/#projects" 
+          class="px-6 py-3 border border-[var(--color-border)] rounded-lg font-medium hover:bg-[var(--color-surface)] transition-colors"
+        >
+          Projects
+        </a>
+      </div>
+    </section>
+
+    <!-- Placeholder sections -->
+    <section id="experience" class="py-24 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-12">Experience</h2>
+        <p class="text-[var(--color-muted)]">
+          Content will be loaded from Notion...
+        </p>
+      </div>
+    </section>
+
+    <section id="projects" class="py-24 px-4">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-12">Projects</h2>
+        <p class="text-[var(--color-muted)]">
+          Content will be loaded from Notion...
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pane Controller with initial pane open -->
+  <PaneController 
+    client:load 
+    initialPane={{ type: 'involvement', slug: slug! }} 
+  />
+</Layout>
+

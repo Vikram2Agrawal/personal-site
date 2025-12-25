@@ -1,0 +1,34 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.local
+.env.production
+
+# Notion sync cache (regenerated at build time)
+src/content/cache/
+
+# Downloaded assets from Notion (regenerated at build time)  
+public/notion-assets/
+
+# Bun
+bun.lockb
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/

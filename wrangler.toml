@@ -1,0 +1,28 @@
+# Cloudflare Pages Configuration
+# This file configures the build and deployment settings for Cloudflare Pages.
+# 
+# To deploy:
+# 1. Connect your Git repository to Cloudflare Pages
+# 2. Set build command: npm run build (or bun run build)
+# 3. Set output directory: dist
+# 4. Add environment variables in Cloudflare Pages dashboard:
+#    - NOTION_TOKEN
+#    - NOTION_DB_ORGANIZATIONS_ID
+#    - NOTION_DB_INVOLVEMENTS_ID
+#    - NOTION_DB_PROJECTS_ID
+#    - NOTION_DB_SKILLS_ID
+
+name = "vikram-personal-site"
+compatibility_date = "2024-12-25"
+
+# Pages-specific settings
+[site]
+bucket = "./dist"
+
+# Build configuration (for reference - actual settings in CF dashboard)
+# build_command = "npm run build"
+# build_output_dir = "dist"
+
+# Node.js version - set NODE_VERSION env var in CF Pages dashboard
+# Recommended: 22 (LTS)
+
