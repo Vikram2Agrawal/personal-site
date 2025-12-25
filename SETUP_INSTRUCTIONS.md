@@ -1741,6 +1741,125 @@ git push origin main
 
 ---
 
+## PHASE 16: Deploy to Cloudflare Pages
+
+This site is **static** (no server-side rendering), so Cloudflare Pages deployment is straightforward.
+
+### Step 16.1: Create Cloudflare Account (if needed)
+
+1. Go to https://dash.cloudflare.com/sign-up
+2. Create account or sign in
+3. Navigate to **Workers & Pages** in the left sidebar
+
+### Step 16.2: Connect GitHub Repository
+
+1. Click **Create application**
+2. Select **Pages**
+3. Click **Connect to Git**
+4. Authorize Cloudflare to access your GitHub account
+5. Select the `personal-site` repository
+6. Click **Begin setup**
+
+### Step 16.3: Configure Build Settings
+
+Enter these exact values:
+
+| Setting | Value |
+|---------|-------|
+| **Project name** | `vikram-personal-site` (or your preferred name) |
+| **Production branch** | `main` |
+| **Framework preset** | `Astro` (select from dropdown) |
+| **Build command** | `npm run build` |
+| **Build output directory** | `dist` |
+
+### Step 16.4: Add Environment Variables
+
+Click **Add variable** for each of these:
+
+| Variable name | Value |
+|---------------|-------|
+| `NODE_VERSION` | `22` |
+| `NOTION_TOKEN` | (get from Vikram - cannot store in git) |
+| `NOTION_DB_ORGANIZATIONS_ID` | `19f6ac6db7a44885b70e9a4d48bb755d` |
+| `NOTION_DB_INVOLVEMENTS_ID` | `0505522332894bf4b274fd27ce744a4d` |
+| `NOTION_DB_PROJECTS_ID` | `5705f2d7f0654194a5dce24786b289ff` |
+| `NOTION_DB_SKILLS_ID` | `54030210120e43b9bc018e7778932ea4` |
+
+**IMPORTANT**: Make sure to set these for both **Production** and **Preview** environments.
+
+### Step 16.5: Deploy
+
+1. Click **Save and Deploy**
+2. Wait for the build to complete (usually 1-2 minutes)
+3. Once deployed, you'll get a URL like `vikram-personal-site.pages.dev`
+
+### Step 16.6: Verify Deployment
+
+1. Visit your `.pages.dev` URL
+2. Check that the homepage loads
+3. Check that styles are applied (dark/light mode)
+4. Check browser console for any errors
+
+### Step 16.7: (Optional) Add Custom Domain
+
+1. Go to your Pages project settings
+2. Click **Custom domains**
+3. Click **Set up a custom domain**
+4. Enter your domain (e.g., `vikram.dev`)
+5. Follow DNS configuration instructions
+
+---
+
+## Alternative: Deploy via Wrangler CLI
+
+If you prefer command-line deployment:
+
+### Install Wrangler
+
+```bash
+bun add -D wrangler
+```
+
+### Login to Cloudflare
+
+```bash
+npx wrangler login
+```
+
+This opens a browser to authenticate.
+
+### Deploy
+
+```bash
+# Build first
+bun run build
+
+# Deploy to Cloudflare Pages
+npx wrangler pages deploy dist --project-name=vikram-personal-site
+```
+
+### Set Environment Variables via CLI
+
+```bash
+# Set each variable (run these one at a time)
+npx wrangler pages secret put NOTION_TOKEN --project-name=vikram-personal-site
+# When prompted, paste the token (get from Vikram)
+
+npx wrangler pages secret put NOTION_DB_ORGANIZATIONS_ID --project-name=vikram-personal-site
+# When prompted, paste: 19f6ac6db7a44885b70e9a4d48bb755d
+
+npx wrangler pages secret put NOTION_DB_INVOLVEMENTS_ID --project-name=vikram-personal-site
+# When prompted, paste: 0505522332894bf4b274fd27ce744a4d
+
+npx wrangler pages secret put NOTION_DB_PROJECTS_ID --project-name=vikram-personal-site
+# When prompted, paste: 5705f2d7f0654194a5dce24786b289ff
+
+npx wrangler pages secret put NOTION_DB_SKILLS_ID --project-name=vikram-personal-site
+# When prompted, paste: 54030210120e43b9bc018e7778932ea4
+```
+
+---
+
 ## Troubleshooting
 
 ### Error: "Cannot find module '../content/cache/organizations.json'"
@@ -1765,6 +1884,30 @@ Check the database IDs are correct (32-character hex strings without dashes).
 Check that your Notion databases have:
 1. A "Published" checkbox property
 2. At least one item with Published = true
+
+### Cloudflare Pages: Build fails with "Cannot find module"
+
+1. Check that `NODE_VERSION` is set to `22` in environment variables
+2. Make sure all Notion env vars are set in Cloudflare dashboard
+3. Check build logs for specific missing module
+
+### Cloudflare Pages: Build succeeds but site shows 404
+
+1. Verify build output directory is set to `dist`
+2. Check that `index.html` exists in the build output
+3. Try redeploying
+
+### Cloudflare Pages: Notion sync fails during build
+
+1. Check all 5 Notion environment variables are set correctly
+2. Verify the Notion integration token hasn't expired
+3. Check that databases are shared with the integration
+
+### Cloudflare Pages: Site loads but no content
+
+1. The Notion sync might have created empty cache files
+2. Check Cloudflare build logs for "Sync complete!" message
+3. Verify database IDs match your actual Notion databases
 
 ---
 
